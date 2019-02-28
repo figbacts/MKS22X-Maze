@@ -71,8 +71,8 @@ public void clearTerminal(){ //erase terminal, go to top left of screen.
         //return solve(???,???)
 //}
 public int solve(){
-board[startRow][startCol] = ' ';
-return solve(startRow, startCol);
+board[startRow][startCol] = '@';
+return -1; //solve(startRow, startCol);
 }
 
 private int solve(int row, int col){ //you can add more parameters since this is private
@@ -81,7 +81,12 @@ private int solve(int row, int col){ //you can add more parameters since this is
         System.out.println(this);
         wait(20);
     }
+    if (board[row][col] == 'E'){
+      return 1;
+    }
+    for (int d = 0; d < 4; d ++){
 
+    }
     return -1; //so it compiles
 }
 private boolean move(int row, int col, String direction){
@@ -114,7 +119,7 @@ return false;
 public static void main(String[] args) {
   Maze maze = new Maze("Maze.txt");
   maze.clearTerminal();
-  //maze.solve();
+  maze.solve();
   System.out.println(maze);
 }
 
