@@ -72,20 +72,35 @@ public void clearTerminal(){ //erase terminal, go to top left of screen.
 //}
 public int solve(){
 board[startRow][startCol] = '@';
-return -1; //solve(startRow, startCol);
+return solve(startRow, startCol, 1);
 }
 
-private int solve(int row, int col){ //you can add more parameters since this is private
+private int solve(int row, int col, int path){ //you can add more parameters since this is private
     if(animate){
         clearTerminal();
         System.out.println(this);
         wait(20);
     }
-    if (board[row][col] == 'E'){
-      return 1;
-    }
     for (int d = 0; d < 4; d ++){
-
+      if (board[row-1][col] == 'E'){
+        return path;
+      }
+      if (d == 0 && move(row,col,"up")){
+         solve(row -1, col, path + 1);
+         remove(row -1,col);
+      }
+      if (d == 1 && move(row,col,"down")){
+        solve(row +1, col, path + 1);
+        remove(row +1,col);
+        }
+      if (d == 2 && move(row,col,"left")){
+        solve(row, col -1, path + 1);
+        remove(row,col -1);
+        }
+      if (d == 3 && move(row,col,"right")){
+        solve(row, col+1, path + 1);
+        remove(row,col + 1);
+      }
     }
     return -1; //so it compiles
 }
@@ -106,11 +121,23 @@ private boolean move(int row, int col, String direction){
     board[row][col] = '@';
     return true;
   }
+  if(direction.equals("up") && board[row -1][col] == 'E'){
+    return true;
+  }
+  if(direction.equals("down") && board[row +1][col] == 'E'){
+    return true;
+  }
+  if(direction.equals("left") && board[row][col -1] == 'E'){
+    return true;
+  }
+  if(direction.equals("right") && board[row][col + 1] == 'E'){
+    return true;
+  }
   return false;
 }
 
 private boolean remove(int row, int col){
-  if (board[row][col] == '#'){
+  if (board[row][col] != '#' && board[row][col] != 'E'){
   board[row][col] = '.';
   return true;
 }
@@ -119,8 +146,10 @@ return false;
 public static void main(String[] args) {
   Maze maze = new Maze("Maze.txt");
   maze.clearTerminal();
-  maze.solve();
+  maze.setAnimate(true);
+  System.out.println(maze.solve());
   System.out.println(maze);
+
 }
 
 
