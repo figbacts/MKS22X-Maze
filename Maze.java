@@ -71,38 +71,55 @@ public void clearTerminal(){ //erase terminal, go to top left of screen.
         //return solve(???,???)
 //}
 public int solve(){
+  int ans = 0;
 board[startRow][startCol] = '@';
-return solve(startRow, startCol, 1);
+if (solve(startRow, startCol)){
+  for(int r = 0; r < board.length; r ++){
+    for (int c = 0; c < board[r].length; c++){
+      if (board[r][c] == '@'){
+        ans += 1;
+      }
+    }
+  }
+  return ans;
+}
+return -1;
 }
 
-private int solve(int row, int col, int path){ //you can add more parameters since this is private
+private boolean solve(int row, int col){ //you can add more parameters since this is private
     if(animate){
         clearTerminal();
         System.out.println(this);
         wait(20);
     }
-    for (int d = 0; d < 4; d ++){
-      if (board[row-1][col] == 'E'){
-        return path;
-      }
-      if (d == 0 && move(row,col,"up")){
-         solve(row -1, col, path + 1);
+    if (board[row][col] == 'E'){
+      return true;
+    }
+      if (move(row,col,"up")){
+         if (solve(row -1, col)){
+           return true;
+         }
          remove(row -1,col);
       }
-      if (d == 1 && move(row,col,"down")){
-        solve(row +1, col, path + 1);
+      if (move(row,col,"down")){
+        if (solve(row +1, col)){
+          return true;
+        }
         remove(row +1,col);
         }
-      if (d == 2 && move(row,col,"left")){
-        solve(row, col -1, path + 1);
+      if (move(row,col,"left")){
+        if (solve(row, col -1)){
+          return true;
+        }
         remove(row,col -1);
         }
-      if (d == 3 && move(row,col,"right")){
-        solve(row, col+1, path + 1);
+      if (move(row,col,"right")){
+        if (solve(row, col+1)){
+          return true;
+        }
         remove(row,col + 1);
-      }
     }
-    return -1; //so it compiles
+    return false; //so it compiles
 }
 private boolean move(int row, int col, String direction){
   if(direction.equals("up") && board[row -1][col] == ' '){
@@ -122,15 +139,19 @@ private boolean move(int row, int col, String direction){
     return true;
   }
   if(direction.equals("up") && board[row -1][col] == 'E'){
+    board[row][col] = '@';
     return true;
   }
   if(direction.equals("down") && board[row +1][col] == 'E'){
+    board[row][col] = '@';
     return true;
   }
   if(direction.equals("left") && board[row][col -1] == 'E'){
+    board[row][col] = '@';
     return true;
   }
   if(direction.equals("right") && board[row][col + 1] == 'E'){
+    board[row][col] = '@';
     return true;
   }
   return false;
@@ -146,7 +167,7 @@ return false;
 public static void main(String[] args) {
   Maze maze = new Maze("Maze.txt");
   maze.clearTerminal();
-  maze.setAnimate(true);
+  maze.setAnimate(false);
   System.out.println(maze.solve());
   System.out.println(maze);
 
