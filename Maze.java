@@ -42,7 +42,10 @@ public Maze(String filename){
     row +=1;
   }
 }
-catch(Exception e){}
+catch(FileNotFoundException e){
+  System.out.println("File " + filename + " does not exist.");
+  System.exit(1);
+}
 }
 public String toString(){
   String ans = "";
